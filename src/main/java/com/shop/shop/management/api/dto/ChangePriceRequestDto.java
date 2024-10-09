@@ -1,19 +1,15 @@
 package com.shop.shop.management.api.dto;
 
-import com.shop.shop.management.domain.entity.Price;
-
-public class ProductSaveDto {
+public class ChangePriceRequestDto {
 
     private String productName;
-    private Long productQty;
     private Integer price;
 
-    public ProductSaveDto() {
+    public ChangePriceRequestDto() {
     }
 
-    public ProductSaveDto(String productName, Long productQty, Integer price) {
+    public ChangePriceRequestDto(String productName, Integer price) {
         this.productName = productName;
-        this.productQty = productQty;
         this.price = price;
     }
 
@@ -23,14 +19,6 @@ public class ProductSaveDto {
 
     public void setProductName(String productName) {
         this.productName = productName;
-    }
-
-    public Long getProductQty() {
-        return productQty;
-    }
-
-    public void setProductQty(Long productQty) {
-        this.productQty = productQty;
     }
 
     public Integer getPrice() {

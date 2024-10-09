@@ -1,5 +1,6 @@
 package com.shop.shop.management.domain.choreographer;
 
+import com.shop.shop.management.api.dto.ChangePriceRequestDto;
 import com.shop.shop.management.api.dto.ProductSaveDto;
 import com.shop.shop.management.domain.service.ProductService;
 import org.apache.logging.log4j.LogManager;
@@ -21,6 +22,10 @@ public class ProductChoreographer {
 
     public ProductSaveDto saveProduct(ProductSaveDto requestDto){
         return productService.saveProduct(requestDto);
+    }
+
+    public ProductSaveDto changePrice(ChangePriceRequestDto requestDto){
+        return productService.changePrice(requestDto);
     }
 
 }

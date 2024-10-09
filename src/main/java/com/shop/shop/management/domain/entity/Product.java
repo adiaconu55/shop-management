@@ -19,12 +19,7 @@ public class Product {
     @Column(nullable = false)
     private Long productQty;
 
-    @OneToMany(
-            mappedBy = "product",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.EAGER
-    )
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Price> priceSet = new HashSet<>();
 
     public void addPrice(Price price){

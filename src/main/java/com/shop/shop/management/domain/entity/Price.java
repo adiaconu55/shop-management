@@ -1,13 +1,9 @@
 package com.shop.shop.management.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
 
 import java.util.Date;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Table(name = "price")
 public class Price {
@@ -15,15 +11,51 @@ public class Price {
     @GeneratedValue
     private Long id;
 
-    @ManyToOne
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
     @Column(nullable = false)
     private int price;
 
-    @Column(nullable = false)
-    private Date ins_ts;
+    @Column(name = "ins_ts", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date insTs;
+
+    @PrePersist
+    protected void onCreate() {
+        this.insTs = new Date();
+    }
+
+    public Price() {
+    }
+
+    public Price(int price) {
+        this.price = price;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
 
 }

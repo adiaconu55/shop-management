@@ -26,8 +26,8 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())  // Disable CSRF for testing purposes
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/shop-management/save-product").hasRole("ADMIN")  // Only ADMIN can access this endpoint
-                        .requestMatchers("/shop-management/**").hasAnyRole("USER", "ADMIN")  // USER and ADMIN can access other endpoints
+                        .requestMatchers("save-product").hasRole("ADMIN")  // Only ADMIN can access this endpoint
+                        .requestMatchers("/**").hasAnyRole("USER", "ADMIN")  // USER and ADMIN can access other endpoints
                         .anyRequest().authenticated()  // All other requests need to be authenticated
                 )
                 .formLogin(form -> form.defaultSuccessUrl("/home", true))  // Redirect to /home after login

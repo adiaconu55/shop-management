@@ -1,5 +1,6 @@
 package com.shop.shop.management.api.controller;
 
+import com.shop.shop.management.api.dto.ChangePriceRequestDto;
 import com.shop.shop.management.api.dto.ProductSaveDto;
 import com.shop.shop.management.domain.choreographer.ProductChoreographer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,12 @@ public class ProductController {
     @PostMapping(value="/save-product")
     public ResponseEntity<ProductSaveDto> saveProduct(@RequestBody ProductSaveDto requestDto){
         ProductSaveDto response = productChoreographer.saveProduct(requestDto);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PostMapping(value="/change-price")
+    public ResponseEntity<ProductSaveDto> changePrice(@RequestBody ChangePriceRequestDto requestDto){
+        ProductSaveDto response = productChoreographer.changePrice(requestDto);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
