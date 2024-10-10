@@ -18,7 +18,6 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Convert the role into a GrantedAuthority (ROLE_USER, ROLE_ADMIN)
         String role = account.getRole() == 1 ? "ROLE_USER" : "ROLE_ADMIN";
         return Collections.singletonList(new SimpleGrantedAuthority(role));
     }

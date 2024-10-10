@@ -58,4 +58,11 @@ public class Price {
         this.price = price;
     }
 
+    public Date getInsTs() {
+        return insTs;
+    }
+
+    public void setInsTs(Date insTs) {
+        this.insTs = insTs;
+    }
 }

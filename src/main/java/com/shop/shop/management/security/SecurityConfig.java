@@ -6,7 +6,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -24,21 +23,21 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())  // Disable CSRF for testing purposes
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("save-product").hasRole("ADMIN")  // Only ADMIN can access this endpoint
-                        .requestMatchers("/**").hasAnyRole("USER", "ADMIN")  // USER and ADMIN can access other endpoints
-                        .anyRequest().authenticated()  // All other requests need to be authenticated
+                        .requestMatchers("save-product").hasRole("ADMIN")
+                        .requestMatchers("change-price").hasRole("ADMIN")
+                        .requestMatchers("/**").hasAnyRole("USER", "ADMIN")
+                        .anyRequest().authenticated()
                 )
-                .formLogin(form -> form.defaultSuccessUrl("/home", true))  // Redirect to /home after login
-                .httpBasic();  // Enable basic authentication for testing with Postman
+                .formLogin(form -> form.defaultSuccessUrl("/home", true))
+                .httpBasic();
 
         return http.build();
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        // NoOpPasswordEncoder is used to avoid encoding passwords
         return NoOpPasswordEncoder.getInstance();
     }
 

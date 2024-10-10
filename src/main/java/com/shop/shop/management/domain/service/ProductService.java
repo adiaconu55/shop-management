@@ -1,11 +1,13 @@
 package com.shop.shop.management.domain.service;
 
 import com.shop.shop.management.api.dto.ChangePriceRequestDto;
-import com.shop.shop.management.api.dto.ProductSaveDto;
+import com.shop.shop.management.api.dto.ProductDto;
 
 public interface ProductService {
 
-    ProductSaveDto saveProduct(ProductSaveDto requestDto);
+    ProductDto saveProduct(ProductDto requestDto);
 
-    ProductSaveDto changePrice(ChangePriceRequestDto request);
+    ProductDto changePrice(ChangePriceRequestDto request);
+
+    ProductDto getProduct(String productName);
 }

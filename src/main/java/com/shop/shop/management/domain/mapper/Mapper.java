@@ -1,6 +1,6 @@
 package com.shop.shop.management.domain.mapper;
 
-import com.shop.shop.management.api.dto.ProductSaveDto;
+import com.shop.shop.management.api.dto.ProductDto;
 import com.shop.shop.management.domain.entity.Price;
 import com.shop.shop.management.domain.entity.Product;
 import org.springframework.stereotype.Component;
@@ -11,7 +11,7 @@ import java.util.Set;
 @Component
 public class Mapper {
 
-    public Product mapToProductEntity(ProductSaveDto dto) {
+    public Product mapToProductEntity(ProductDto dto) {
         Product product = new Product();
         product.setProductName(dto.getProductName());
         product.setProductQty(dto.getProductQty());
@@ -28,8 +28,8 @@ public class Mapper {
         return product;
     }
 
-    public ProductSaveDto mapToProductSaveDto(Product product) {
-        ProductSaveDto dto = new ProductSaveDto();
+    public ProductDto mapToProductDto(Product product) {
+        ProductDto dto = new ProductDto();
         dto.setProductName(product.getProductName());
         dto.setProductQty(product.getProductQty());
 

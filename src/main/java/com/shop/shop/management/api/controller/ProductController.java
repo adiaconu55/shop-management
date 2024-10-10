@@ -1,15 +1,12 @@
 package com.shop.shop.management.api.controller;
 
 import com.shop.shop.management.api.dto.ChangePriceRequestDto;
-import com.shop.shop.management.api.dto.ProductSaveDto;
+import com.shop.shop.management.api.dto.ProductDto;
 import com.shop.shop.management.domain.choreographer.ProductChoreographer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class ProductController {
@@ -22,20 +19,18 @@ public class ProductController {
     }
 
     @PostMapping(value="/save-product")
-    public ResponseEntity<ProductSaveDto> saveProduct(@RequestBody ProductSaveDto requestDto){
-        ProductSaveDto response = productChoreographer.saveProduct(requestDto);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    public ResponseEntity<ProductDto> saveProduct(@RequestBody ProductDto requestDto){
+        return new ResponseEntity<>(productChoreographer.saveProduct(requestDto), HttpStatus.OK);
     }
 
     @PostMapping(value="/change-price")
-    public ResponseEntity<ProductSaveDto> changePrice(@RequestBody ChangePriceRequestDto requestDto){
-        ProductSaveDto response = productChoreographer.changePrice(requestDto);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    public ResponseEntity<ProductDto> changePrice(@RequestBody ChangePriceRequestDto requestDto){
+        return new ResponseEntity<>(productChoreographer.changePrice(requestDto), HttpStatus.OK);
     }
 
-    @GetMapping("/test")
-    public ResponseEntity<String> testEndpoint() {
-        return new ResponseEntity<>("Endpoint is reachable", HttpStatus.OK);
+    @GetMapping("/get-product/{productName}")
+    public ResponseEntity<ProductDto> getProduct(@PathVariable String productName) {
+        return new ResponseEntity<ProductDto>(productChoreographer.getProduct(productName), HttpStatus.OK);
     }
 
 }

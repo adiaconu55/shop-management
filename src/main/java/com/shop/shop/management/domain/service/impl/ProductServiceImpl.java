@@ -1,10 +1,11 @@
 package com.shop.shop.management.domain.service.impl;
 
 import com.shop.shop.management.api.dto.ChangePriceRequestDto;
-import com.shop.shop.management.api.dto.ProductSaveDto;
+import com.shop.shop.management.api.dto.ProductDto;
 import com.shop.shop.management.domain.entity.Price;
 import com.shop.shop.management.domain.entity.Product;
 import com.shop.shop.management.domain.exception.ProductAlreadyExistsException;
+import com.shop.shop.management.domain.exception.ProductDoesNotExistException;
 import com.shop.shop.management.domain.mapper.Mapper;
 import com.shop.shop.management.domain.repository.ProductRepository;
 import com.shop.shop.management.domain.service.ProductService;
@@ -32,7 +33,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductSaveDto saveProduct(ProductSaveDto requestDto) {
+    public ProductDto saveProduct(ProductDto requestDto) {
         log.info("Saving product with name {}", requestDto.getProductName());
         productRepository.findByProductName(requestDto.getProductName())
                 .ifPresent(product -> {
@@ -49,22 +50,36 @@ public class ProductServiceImpl implements ProductService {
         newProduct.setPriceSet(priceSet);
         var savedProduct = productRepository.save(newProduct);
 
-        return mapper.mapToProductSaveDto(savedProduct);
+        return mapper.mapToProductDto(savedProduct);
     }
 
     @Transactional
-    public ProductSaveDto changePrice(ChangePriceRequestDto request){
-        log.info("Changing price for product with id {}", request.getProductName());
+    public ProductDto changePrice(ChangePriceRequestDto request){
+        log.info("Changing price for product {}", request.getProductName());
 
         Product product = productRepository.findByProductName(request.getProductName())
-                .orElseThrow(() -> new IllegalArgumentException("Product not found with id: " + request.getProductName()));
+                .orElseThrow(() -> {
+                    throw new ProductDoesNotExistException();
+                });
 
         Price price = new Price();
         price.setPrice(request.getPrice());
         price.setProduct(product);
         product.addPrice(price);
 
-        Product updatedProduct = productRepository.save(product);
-        return mapper.mapToProductSaveDto(updatedProduct);
+        ProductDto productDto = mapper.mapToProductDto(product);
+        productDto.setPrice(request.getPrice());
+        return productDto;
+    }
+
+    public ProductDto getProduct(String productName){
+        log.warn("Fetching product {}", productName);
+
+        Product product = productRepository.findByProductName(productName)
+                .orElseThrow(() -> {
+                    throw new ProductDoesNotExistException();
+                });
+
+        return mapper.mapToProductDto(product);
     }
 }
