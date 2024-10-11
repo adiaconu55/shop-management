@@ -16,7 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -53,6 +55,20 @@ public class ProductServiceImpl implements ProductService {
         return mapper.mapToProductDto(savedProduct);
     }
 
+    @Override
+    public ProductDto deleteProduct(String productName) {
+        log.info("Deleting product {}", productName);
+        Product product = productRepository.findByProductName(productName)
+                .orElseThrow(() -> {
+                    throw new ProductDoesNotExistException();
+                });
+
+        var deletedProduct = mapper.mapToProductDto(product);
+        productRepository.delete(product);
+
+        return deletedProduct;
+    }
+
     @Transactional
     public ProductDto changePrice(ChangePriceRequestDto request){
         log.info("Changing price for product {}", request.getProductName());
@@ -81,5 +97,12 @@ public class ProductServiceImpl implements ProductService {
                 });
 
         return mapper.mapToProductDto(product);
+    }
+
+    @Override
+    public List<ProductDto> getAllProducts(){
+        log.info("Fetching all products");
+
+        return productRepository.findAll().stream().map(item -> mapper.mapToProductDto(item)).collect(Collectors.toList());
     }
 }

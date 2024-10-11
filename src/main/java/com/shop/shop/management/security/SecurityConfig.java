@@ -27,6 +27,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("save-product").hasRole(SecurityRoleEnum.ADMIN.name())
+                        .requestMatchers("delete-product").hasRole(SecurityRoleEnum.ADMIN.name())
                         .requestMatchers("change-price").hasRole(SecurityRoleEnum.ADMIN.name())
                         .requestMatchers("/**").hasAnyRole(SecurityRoleEnum.USER.name(), SecurityRoleEnum.ADMIN.name())
                         .anyRequest().authenticated()

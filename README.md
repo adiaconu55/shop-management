@@ -1,6 +1,7 @@
 # Proiectul Shop Management
 
 Acest proiect este o aplicație de management pentru un magazin, construită utilizând **Spring Boot** și **Log4j2** pentru logare. Proiectul oferă funcționalități pentru gestionarea produselor și a prețurilor într-o maniera care stochează istoricul acestora, autentificare utilizator și roluri de securitate.
+Aplicația este construită pe structura DDD (Domain Driven Design) care ne ajută să punem accent pe înțelegerea și modelarea domeniului de afaceri în centrul dezvoltării aplicațiilor. Acest stil de dezvoltare oferă o serie de beneficii, mai ales în cazul proiectelor complexe, care implică logici de afaceri extinse și modele de date sofisticate.
 
 ## Funcționalități
 - Adăugare, ștergere și preluare produse.

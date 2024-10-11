@@ -15,6 +15,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class ProductChoreographer {
@@ -43,6 +45,24 @@ public class ProductChoreographer {
                     requestDto.getProductQty(),
                     requestDto.getPrice()),
                     e);
+            throw new CustomErrorResponseException("An error occured in the application. Please contact the system administrator");
+        }
+
+        return response;
+    }
+
+    public ProductDto deleteProduct(String productName){
+        CustomUserDetails user = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.info(MessageFormat.format("User {0} with {1} role",user.getUsername(),
+                SecurityRoleEnum.valueOf(user.getRole())));
+        ProductDto response = null;
+        try{
+            response = productService.deleteProduct(productName);
+        } catch (ProductDoesNotExistException e){
+            throw new CustomErrorResponseException(e.getMessage());
+        } catch (Exception e){
+            log.error(MessageFormat.format("Error deleting product {0}",
+                            productName),e);
             throw new CustomErrorResponseException("An error occured in the application. Please contact the system administrator");
         }
 
@@ -79,6 +99,24 @@ public class ProductChoreographer {
             throw new CustomErrorResponseException(e.getMessage());
         } catch (Exception e){
             log.error(MessageFormat.format("Error getting product: {0}", productName),e);
+            throw new CustomErrorResponseException("An error occured in the application. Please contact the system administrator");
+        }
+
+        return response;
+    }
+
+    public List<ProductDto> getAllProducts(){
+        CustomUserDetails user = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.info(MessageFormat.format("User {0} with {1} role",user.getUsername(),
+                SecurityRoleEnum.valueOf(user.getRole())));
+        List<ProductDto> response = new ArrayList<>();
+        try{
+            response = productService.getAllProducts();
+        } catch (ProductDoesNotExistException e){
+            log.error("Error getting all products");
+            throw new CustomErrorResponseException(e.getMessage());
+        } catch (Exception e){
+            log.error("Error getting all products: {0}",e);
             throw new CustomErrorResponseException("An error occured in the application. Please contact the system administrator");
         }
 

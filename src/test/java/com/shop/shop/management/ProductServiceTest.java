@@ -16,9 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -57,6 +55,7 @@ public class ProductServiceTest {
         product = new Product();
         product.setProductName("Test Product");
         product.setProductQty(10L);
+
         price = new Price();
         price.setPrice(100);
         price.setProduct(product);
@@ -180,4 +179,82 @@ public class ProductServiceTest {
         //Then
         verify(productRepository).findByProductName(productDto.getProductName());
     }
+
+    @Test
+    void getAllProductsShouldReturnAllProducts() {
+        //Given
+        Product product1 = new Product();
+        product1.setProductName("Product 1");
+        product1.setProductQty(10L);
+        product1.setPriceSet(Set.of(new Price(product1,150 )));
+
+        Product product2 = new Product();
+        product2.setProductName("Product 2");
+        product2.setProductQty(20L);
+        product2.setPriceSet(Set.of(new Price(product2,200)));
+
+        List<Product> products = List.of(product1, product2);
+
+        when(productRepository.findAll()).thenReturn(products);
+        when(mapper.mapToProductDto(product1)).thenReturn(new ProductDto("Product 1", 10L, 150));
+        when(mapper.mapToProductDto(product2)).thenReturn(new ProductDto("Product 2", 20L, 200));
+
+        //When
+        List<ProductDto> productDtos = productService.getAllProducts();
+
+        //Assert
+        assertNotNull(productDtos);
+        assertEquals(2, productDtos.size());
+        assertEquals("Product 1", productDtos.get(0).getProductName());
+        assertEquals(150, productDtos.get(0).getPrice());
+        assertEquals("Product 2", productDtos.get(1).getProductName());
+        assertEquals(200, productDtos.get(1).getPrice());
+
+        //Then
+        verify(productRepository).findAll();
+        verify(mapper).mapToProductDto(product1);
+        verify(mapper).mapToProductDto(product2);
+    }
+
+    @Test
+    void deleteProductShouldDeleteProductWhenProductExists() {
+        //Given
+        Product productToDelete = new Product();
+        productToDelete.setProductName("Product to Delete");
+        productToDelete.setProductQty(15L);
+
+        ProductDto productDtoToDelete = new ProductDto();
+        productDtoToDelete.setProductName("Product to Delete");
+        productDtoToDelete.setProductQty(15L);
+
+        when(productRepository.findByProductName("Product to Delete")).thenReturn(Optional.of(productToDelete));
+        when(mapper.mapToProductDto(productToDelete)).thenReturn(productDtoToDelete);
+
+        //When
+        ProductDto deletedProductDto = productService.deleteProduct("Product to Delete");
+
+        //Assert
+        assertNotNull(deletedProductDto);
+        assertEquals("Product to Delete", deletedProductDto.getProductName());
+
+        //Then
+        verify(productRepository).findByProductName("Product to Delete");
+        verify(productRepository).delete(productToDelete);
+        verify(mapper).mapToProductDto(productToDelete);
+    }
+
+    @Test
+    void deleteProductShouldThrowProductDoesNotExistExceptionWhenProductDoesNotExist() {
+        //Given
+        when(productRepository.findByProductName("Non-existent Product")).thenReturn(Optional.empty());
+
+        //When
+        assertThrows(ProductDoesNotExistException.class, () -> productService.deleteProduct("Non-existent Product"));
+
+        //Then
+        verify(productRepository).findByProductName("Non-existent Product");
+        verify(productRepository, never()).delete(any(Product.class));
+        verify(mapper, never()).mapToProductDto(any(Product.class));
+    }
+
 }
