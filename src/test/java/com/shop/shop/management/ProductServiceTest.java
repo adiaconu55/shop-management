@@ -121,6 +121,25 @@ public class ProductServiceTest {
     }
 
     @Test
+    void getProductShouldReturnTheLatestPrice() {
+        //Given
+        when(productRepository.findByProductName(changePriceRequestDto.getProductName())).thenReturn(Optional.of(product));
+        when(mapper.mapToProductDto(product)).thenReturn(productDto);
+
+        //When
+        ProductDto updatedProduct = productService.changePrice(changePriceRequestDto);
+        changePriceRequestDto.setPrice(200);
+        updatedProduct = productService.changePrice(changePriceRequestDto);
+        changePriceRequestDto.setPrice(300);
+        updatedProduct = productService.changePrice(changePriceRequestDto);
+
+        //Assert
+        assertNotNull(updatedProduct);
+        assertEquals(changePriceRequestDto.getPrice(),
+                productService.getProduct(changePriceRequestDto.getProductName()).getPrice());
+    }
+
+    @Test
     void changePriceShouldThrowProductDoesNotExistExceptionWhenProductDoesNotExist() {
         //Given
         when(productRepository.findByProductName(changePriceRequestDto.getProductName())).thenReturn(Optional.empty());
