@@ -1,5 +1,6 @@
 package com.shop.shop.management.security;
 
+import com.shop.shop.management.domain.constants.SecurityRoleEnum;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,9 +26,9 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("save-product").hasRole("ADMIN")
-                        .requestMatchers("change-price").hasRole("ADMIN")
-                        .requestMatchers("/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("save-product").hasRole(SecurityRoleEnum.ADMIN.name())
+                        .requestMatchers("change-price").hasRole(SecurityRoleEnum.ADMIN.name())
+                        .requestMatchers("/**").hasAnyRole(SecurityRoleEnum.USER.name(), SecurityRoleEnum.ADMIN.name())
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form.defaultSuccessUrl("/home", true))
