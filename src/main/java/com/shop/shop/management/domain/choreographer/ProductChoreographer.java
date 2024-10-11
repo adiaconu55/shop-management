@@ -41,7 +41,8 @@ public class ProductChoreographer {
             log.error(MessageFormat.format("Error saving product {0} with quantity {1} and price {2}",
                     requestDto.getProductName(),
                     requestDto.getProductQty(),
-                    requestDto.getPrice()));
+                    requestDto.getPrice()),
+                    e);
             throw new CustomErrorResponseException("An error occured in the application. Please contact the system administrator");
         }
 
@@ -59,7 +60,7 @@ public class ProductChoreographer {
             throw new CustomErrorResponseException(e.getMessage());
         } catch (Exception e){
             log.error(MessageFormat.format("Error changing price of {0} with price {1}", requestDto.getProductName(),
-                    requestDto.getPrice()));
+                    requestDto.getPrice()), e);
             throw new CustomErrorResponseException("An error occured in the application. Please contact the system administrator");
         }
 
@@ -74,9 +75,10 @@ public class ProductChoreographer {
         try{
             response = productService.getProduct(productName);
         } catch (ProductDoesNotExistException e){
+            log.error(MessageFormat.format("Error getting product: {0}", productName));
             throw new CustomErrorResponseException(e.getMessage());
         } catch (Exception e){
-            log.error(MessageFormat.format("Error getting product: {0}", productName));
+            log.error(MessageFormat.format("Error getting product: {0}", productName),e);
             throw new CustomErrorResponseException("An error occured in the application. Please contact the system administrator");
         }
 
