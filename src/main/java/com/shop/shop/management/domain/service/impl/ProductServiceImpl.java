@@ -73,7 +73,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public ProductDto getProduct(String productName){
-        log.warn("Fetching product {}", productName);
+        log.info("Fetching product {}", productName);
 
         Product product = productRepository.findByProductName(productName)
                 .orElseThrow(() -> {
